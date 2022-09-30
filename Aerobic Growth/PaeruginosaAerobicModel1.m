@@ -8,8 +8,9 @@
 
 % close all
 
-sheet = '/Users/peteruhl/Library/CloudStorage/OneDrive-Personal/Growth-Curves/Aerobic Growth';
+% sheet = '/Users/peteruhl/Library/CloudStorage/OneDrive-Personal/Growth-Curves/Aerobic Growth';
 % sheet = sheet + "/Calbicans Aerobic.xlsx";
+sheet = pwd;
 sheet = sheet + "/Paeruginosa Aerobic.xlsx";
 
 %%% Load in data from spreadsheet

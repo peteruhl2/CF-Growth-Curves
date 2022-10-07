@@ -4,19 +4,19 @@
 
 global rmax ks dmax ksp lambda mu eta
 
-rmax = 50;
+rmax = 5;
 ks = 1;
-dmax = 1;
+dmax = 2;
 ksp = 0.1;
 lambda = 120;
-mu = 0.1;
-eta = 1e-7;
+mu = 100;
+eta = 1e-8;
 
 B0 = 1e5;
 x0 = lambda/mu;
 
 y0 = [B0; x0];
-tspan = [0 16*24];
+tspan = [0 16];
 
 [t,y] = ode15s(@(t,y) rhs(t,y), tspan, y0);
 

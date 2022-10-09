@@ -9,24 +9,31 @@
 
 % close all
 
+global tmax
+
 %%% Load in data from spreadsheet
-data = xlsread('/Users/peteruhl/OneDrive/Growth-Curves/Anaerobic Growth/Calbicans Anaerobic.xlsx');
+sheet = pwd;
+sheet = sheet + "/Calbicans Anaerobic.xlsx";
+data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
 Cal = data(2:end,2);
 
+%%% end of exponential phase
+tmax = 0.44;
+
 %%% parameters
-r = 19.9;
-Ks_bar = .00475;
-d = 7.3519;
-gamma = 6.4378;
+r = 24.9;
+Ks_bar = .00875;
+d = .01519;
+gamma = 1.4378;
 delta_bar = .800835;
-mu_bar = .0000802661;
+mu_bar = .00802661;
 alpha_bar = 1.;
 
 % IC for ODE
-b0 = 0.0684;
+b0 = 0.000684;
 
 p = [r, Ks_bar, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
@@ -43,7 +50,7 @@ Aeq = []; Beq = [];
 % this makes sure that gamma > mu
 A = [0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
-ub = [50; 100; 50; 50; 50; 50; 100; 0.01];
+ub = [50; 100; 50; 50; 50; 50; 100; 0.1];
 
 
 tic
@@ -92,6 +99,12 @@ xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
 legend("Model","Data",'Fontsize',18)
 
+figure()
+hold on; box on
+plot(t,y(:,3), 'Linewidth',2)
+xlabel("Time (days)", 'Fontsize',18)
+legend("Nutrient",'Fontsize',18,'location','east')
+
 % figure(); hold on
 % thing = max(y(:,1)+y(:,2));
 % thing2 = max(Pae);
@@ -104,14 +117,22 @@ legend("Model","Data",'Fontsize',18)
 
 %%% ODE function
 function Xp = rhs(t,X,p)
+global tmax
 
 % parameters
 r = p(1);
 Ks_bar = p(2);
-d = p(3);
+% d = p(3);
 gamma = p(4);
 delta_bar = p(5);
 mu_bar = p(6);
+
+%%% set no inital death
+if t < tmax
+    d = 0;
+else
+    d = p(3);
+end
 
 Xp = zeros(3,1);
 

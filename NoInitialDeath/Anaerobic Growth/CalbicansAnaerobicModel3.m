@@ -24,15 +24,15 @@ Cal = data(2:end,2);
 tmax = 0.44;
 
 %%% parameters
-r = 22.9;
-Ks_bar = .0475;
-n = 3.7;
+r = 12.9;
+Ks_bar = .001475;
+n = 1.7;
 d = 1.3519;
 % d = 1.6;
-gamma = 6.4378;
+gamma = .4378;
 delta_bar = .800835;
-mu_bar = .000802661;
-alpha_bar = 1.;
+mu_bar = .802661;
+alpha_bar = 1.1;
 
 % IC for ODE
 b0 = 0.00684;
@@ -102,6 +102,13 @@ plot(tdata,Cal,'x')
 xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
 legend("Model","Data",'Fontsize',18,'location','east')
+
+figure()
+hold on; box on
+plot(t,y(:,3), 'Linewidth',2)
+xlabel("Time (days)", 'Fontsize',18)
+legend("Nutrient",'Fontsize',18,'location','east')
+
 
 % bar graph of data
 % figure()

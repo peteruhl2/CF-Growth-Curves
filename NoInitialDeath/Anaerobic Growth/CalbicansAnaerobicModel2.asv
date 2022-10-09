@@ -1,13 +1,15 @@
-%%% C albicans anaerobic growth, model #3
+%%% C albicans anaerobic growth, model #2
 %%% model is
 %%%
-%%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
+%%% x' = ((r*z)/(Ks + z))*x*(1 - (x+y)/k) - dx
 %%% y' = dx - gamma*y
 %%% z' = -delta*x*z + mu*y
 %%%
 %%% started 2/9/22
 
 % close all
+
+global tmax
 
 %%% Load in data from spreadsheet
 sheet = pwd;
@@ -18,21 +20,22 @@ data = xlsread(sheet);
 tdata = data(2:end,1)/60/24;
 Cal = data(2:end,2);
 
+%%% end of exponential phase
+tmax = 0.44;
+
 %%% parameters
-r = 19.9;
+r = 22.9;
 Ks_bar = .00475;
-n = 3.7;
-d = 7.3519;
-% d = 1.6;
-gamma = 6.4378;
-delta_bar = .800835;
-mu_bar = .0000802661;
+d = .1519;
+gamma = 3.4378;
+delta_bar = .0800835;
+mu_bar = .00802661;
 alpha_bar = 1.;
 
 % IC for ODE
 b0 = 0.0684;
 
-p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
+p = [r, Ks_bar, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
 %%% do optimization here ==================================================
 options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
@@ -45,9 +48,9 @@ bdata = Cal;
 Aeq = []; Beq = [];
 
 % this makes sure that gamma > mu
-A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
+A = [0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
-ub = [50; 20; 100; 50; 50; 50; 50; 100; 0.01];
+ub = [50; 100; 50; 50; 50; 50; 100; 0.1];
 
 
 tic
@@ -65,8 +68,6 @@ b0 = p(end);
 y0 = [b0, 0, 1];
 
 [t, y] = ode15s(@(t,y) rhs(t,y,p), tdata, y0);
-% [t, y] = ode45c(@(t,y) rhs(t,y,p), tdata, y0);
-
 
 J = err(p, tdata, Cal)
 p = p'
@@ -98,15 +99,11 @@ xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
 legend("Model","Data",'Fontsize',18)
 
-% bar graph of data
-% figure()
-% hold on; box on
-% bar(tdata,Cal)
-% xlabel("Time (days)", 'Fontsize',18)
-% ylabel("Optical Density", 'Fontsize',18)
-% axis([0 tdata(end) 0 1.0])
-% legend('C. ablicans optical density', 'Fontsize', 18)
-% exportgraphics(gcf,'calan.pdf','ContentType','vector')
+figure()
+hold on; box on
+plot(t,y(:,3), 'Linewidth',2)
+xlabel("Time (days)", 'Fontsize',18)
+legend("Nutrient",'Fontsize',18,'location','east')
 
 % figure(); hold on
 % thing = max(y(:,1)+y(:,2));
@@ -120,15 +117,22 @@ legend("Model","Data",'Fontsize',18)
 
 %%% ODE function
 function Xp = rhs(t,X,p)
+global tmax
 
 % parameters
 r = p(1);
 Ks_bar = p(2);
-n = p(3);
-d = p(4);
-gamma = p(5);
-delta_bar = p(6);
-mu_bar = p(7);
+% d = p(3);
+gamma = p(4);
+delta_bar = p(5);
+mu_bar = p(6);
+
+%%% set no inital death
+if t < tmax
+    d = 0;
+else
+    d = p(3);
+end
 
 Xp = zeros(3,1);
 
@@ -137,7 +141,7 @@ y = X(2);
 z = X(3);
 
 % ode function
-Xp(1) = ((r*z^n)/(Ks_bar^n + z^n))*x*(1 - (x + y)) - d*x;
+Xp(1) = ((r*z)/(Ks_bar + z))*x*(1 - (x + y)) - d*x;
 Xp(2) = d*x - gamma*y;
 Xp(3) = -delta_bar*x*z + mu_bar*y;
 

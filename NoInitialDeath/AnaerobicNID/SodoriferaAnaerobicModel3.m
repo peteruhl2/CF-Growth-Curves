@@ -1,11 +1,11 @@
-%%% C albicans anaerobic growth, model #3
+%%% S odorifera anaerobic growth, model #3
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
 %%% y' = dx - gamma*y
 %%% z' = -delta*x*z + mu*y
 %%%
-%%% started 2/9/22
+%%% started 12/13/22
 
 % close all
 
@@ -13,15 +13,15 @@ global tmax
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/Calbicans Anaerobic.xlsx";
+sheet = sheet + "/Sodorifera Anaerobic.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
-Cal = data(2:end,2);
+Sod = data(2:end,2);
 
 %%% end of exponential phase
-tmax = 0.44;
+tmax = 0.8;
 
 %%% parameters
 r = 26.69;
@@ -44,7 +44,7 @@ options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
 %                    'Tolx',1e-1,'TolCon',1e-1,'TolFun',1e-1);
 
 
-bdata = Cal;
+bdata = Sod;
 
 % A = []; b_opt = []; 
 Aeq = []; Beq = [];
@@ -74,11 +74,11 @@ y0 = [b0, 0, 1];
 % [t, y] = ode45c(@(t,y) rhs(t,y,p), tdata, y0);
 
 
-J = err(p, tdata, Cal)
+J = err(p, tdata, Sod)
 p = p'
 
 %%% calculate AIC
-M = length(Cal); % number of data points
+M = length(Sod); % number of data points
 Np = length(p); % number of parameters
 aic = M*log(J/M) + (2*M*(Np + 1))/(M - Np - 2)
 
@@ -89,7 +89,7 @@ alpha_bar = p(end-1);
 figure()
 hold on; box on
 plot(t,alpha_bar*(y(:,1)+y(:,2)),"LineWidth",2)
-plot(tdata,Cal,'x')
+plot(tdata,Sod,'x')
 plot(t,alpha_bar*y(:,1),'Linewidth',2)
 plot(t,alpha_bar*y(:,2),'Linewidth',2)
 xlabel("Time (days)")
@@ -99,10 +99,10 @@ legend("Model","Data","Living","Dead")
 figure()
 hold on; box on
 plot(t,alpha_bar*(y(:,1)+y(:,2)),"LineWidth",2)
-plot(tdata,Cal,'x')
+plot(tdata,Sod,'x')
 xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
-legend("Model","Data",'Fontsize',18,'location','east')
+legend("Model","Data",'Fontsize',18,'location','northeast')
 
 figure()
 hold on; box on

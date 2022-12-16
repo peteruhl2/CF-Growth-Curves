@@ -24,14 +24,14 @@ Cal = data(2:end,2);
 tmax = 0.44;
 
 %%% parameters
-r = 26.69;
-Ks_bar = .7524475;
-n = 2.64;
-d = 1.3855;
+r = 36.69;
+Ks_bar = .97524475;
+n = 2.84;
+d = 5.3855;
 % d = 1.6;
 gamma = 5.74378;
-delta_bar = 2.59700835;
-mu_bar = 2.317502661;
+delta_bar = 6.59700835;
+mu_bar = .317502661;
 alpha_bar = 0.5436;
 
 % IC for ODE

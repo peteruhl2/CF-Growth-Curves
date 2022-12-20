@@ -1,4 +1,4 @@
-%%% E faecalis aerobic growth, model #3
+%%% P aeurginosa aerobic growth, model #3
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
@@ -13,29 +13,29 @@ global tmax
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/EfaecalisAero.xlsx";
+sheet = sheet + "/PseudoAero.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
-Ef = data(2:end,2);
+Pae = data(2:end,2);
 
 %%% end of exponential phase
-tmax = 0.40;
+tmax = 0.71;
 
 %%% parameters
-r = 32.29;
-Ks_bar = .644524475;
-n = 2.764;
-d = 4.140855;
+r = 36.69;
+Ks_bar = .6524475;
+n = 2.1764;
+d = 3.40855;
 % d = 1.6;
-gamma = .74378;
-delta_bar = .259700835;
-mu_bar = .9317502661;
-alpha_bar = 0.76436;
+gamma = 5.74378;
+delta_bar = 2.59700835;
+mu_bar = 6.317502661;
+alpha_bar = 0.36436;
 
 % IC for ODE
-b0 = 0.007912284;
+b0 = 0.008612284;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
@@ -44,7 +44,7 @@ options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
 %                    'Tolx',1e-1,'TolCon',1e-1,'TolFun',1e-1);
 
 
-bdata = Ef;
+bdata = Pae;
 
 % A = []; b_opt = []; 
 Aeq = []; Beq = [];
@@ -53,13 +53,13 @@ Aeq = []; Beq = [];
 A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
 lb(3) = 1;
-lb(4) = 0.11;
+lb(4) = 0.01;
 ub = [50; 20; 100; 30; 30; 30; 30; 1; 0.01];
 
 
 tic
-[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
 % [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
+[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
 toc
 
 % global tdata bdata
@@ -75,11 +75,11 @@ y0 = [b0, 0, 1];
 % [t, y] = ode45c(@(t,y) rhs(t,y,p), tdata, y0);
 
 
-J = err(p, tdata, Ef)
+J = err(p, tdata, Pae)
 p = p'
 
 %%% calculate AIC
-M = length(Ef); % number of data points
+M = length(Pae); % number of data points
 Np = length(p); % number of parameters
 aic = M*log(J/M) + (2*M*(Np + 1))/(M - Np - 2)
 
@@ -90,17 +90,17 @@ alpha_bar = p(end-1);
 figure()
 hold on; box on
 plot(t,alpha_bar*(y(:,1)+y(:,2)),"LineWidth",2)
-plot(tdata,Ef,'x')
+plot(tdata,Pae,'x')
 plot(t,alpha_bar*y(:,1),'Linewidth',2)
 plot(t,alpha_bar*y(:,2),'Linewidth',2)
 xlabel("Time (days)")
 ylabel("Optical Density")
-legend("Model","Data","Living","Dead")
+legend("Model","Data","Living","Dead",'Fontsize',14,'location','east')
 
 figure()
 hold on; box on
 plot(t,alpha_bar*(y(:,1)+y(:,2)),"LineWidth",2)
-plot(tdata,Ef,'x')
+plot(tdata,Pae,'x')
 xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
 legend("Model","Data",'Fontsize',18,'location','east')

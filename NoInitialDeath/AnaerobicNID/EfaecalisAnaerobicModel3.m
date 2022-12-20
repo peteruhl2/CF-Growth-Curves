@@ -24,18 +24,18 @@ Ef = data(2:end,2);
 tmax = 0.19;
 
 %%% parameters
-r = 26.69;
-Ks_bar = .7524475;
-n = 2.64;
-d = 1.3855;
+r = 25.69;
+Ks_bar = .2524475;
+n = 2.264;
+d = 1.40855;
 % d = 1.6;
-gamma = 5.74378;
-delta_bar = 2.59700835;
+gamma = 3.74378;
+delta_bar = 3.59700835;
 mu_bar = 2.317502661;
-alpha_bar = 0.5436;
+alpha_bar = 0.56436;
 
 % IC for ODE
-b0 = 0.00812284;
+b0 = 0.008612284;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 

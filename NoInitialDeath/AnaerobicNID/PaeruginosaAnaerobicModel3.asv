@@ -24,18 +24,18 @@ Pae = data(2:end,2);
 tmax = 0.5;
 
 %%% parameters
-r = 21.69;
-Ks_bar = .7324475;
-n = 3.28;
-d = 1.1925855;
+r = 29.69;
+Ks_bar = .7524475;
+n = 2.64;
+d = 1.25855;
 % d = 1.6;
-gamma = 3.74378;
-delta_bar = 2.509700835;
-mu_bar = 7.317502661;
-alpha_bar = 0.5852;
+gamma = 1.74378;
+delta_bar = 5.59700835;
+mu_bar = 2.317502661;
+alpha_bar = 0.5436;
 
 % IC for ODE
-b0 = 0.00652284;
+b0 = 0.00812284;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 

@@ -23,8 +23,8 @@ Ef = data(2:end,2);
 tmax = 0.19;
 
 %%% parameters
-r = 18.9;
-d = 4.3519;
+r = 38.9;
+d = .03519;
 gamma = 2.4378;
 alpha_bar = .10;
 

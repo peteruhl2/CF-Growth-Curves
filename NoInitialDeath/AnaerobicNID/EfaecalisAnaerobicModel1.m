@@ -23,9 +23,9 @@ Ef = data(2:end,2);
 tmax = 0.19;
 
 %%% parameters
-r = 38.9;
+r = 22.9;
 d = .03519;
-gamma = 2.4378;
+gamma = .4378;
 alpha_bar = .10;
 
 % IC for ODE

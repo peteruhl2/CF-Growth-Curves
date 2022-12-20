@@ -24,18 +24,18 @@ Pae = data(2:end,2);
 tmax = 0.5;
 
 %%% parameters
-r = 21.69;
-Ks_bar = .7324475;
-n = 3.28;
-d = 1.1925855;
+r = 22.67;
+Ks_bar = .8052524475;
+n = 3.67;
+d = 3.29925855;
 % d = 1.6;
-gamma = 3.74378;
-delta_bar = 2.509700835;
-mu_bar = 7.317502661;
-alpha_bar = 0.5852;
+gamma = 12.1874378;
+delta_bar = 2.5409700835;
+mu_bar = 12.317502661;
+alpha_bar = 0.5158;
 
 % IC for ODE
-b0 = 0.00652284;
+b0 = 0.0048652284;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
@@ -57,8 +57,8 @@ ub = [50; 20; 100; 30; 30; 30; 30; 100; 0.01];
 
 
 tic
-% [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
-[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
+[p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
+% [p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
 toc
 
 % global tdata bdata
@@ -102,7 +102,7 @@ plot(t,alpha_bar*(y(:,1)+y(:,2)),"LineWidth",2)
 plot(tdata,Pae,'x')
 xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
-legend("Model","Data",'Fontsize',18,'location','northeast')
+legend("Model","Data",'Fontsize',18,'location','east')
 
 figure()
 hold on; box on

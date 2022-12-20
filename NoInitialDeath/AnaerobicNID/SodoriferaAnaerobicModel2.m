@@ -1,7 +1,7 @@
-%%% S odorifera anaerobic growth, model #3
+%%% S odorifera anaerobic growth, model #2
 %%% model is
 %%%
-%%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
+%%% x' = ((r*z)/(Ks + z))*x*(1 - (x+y)/k) - dx
 %%% y' = dx - gamma*y
 %%% z' = -delta*x*z + mu*y
 %%%
@@ -26,7 +26,6 @@ tmax = 0.8;
 %%% parameters
 r = 26.69;
 Ks_bar = .278524475;
-n = 3.88;
 d = 0.4815;
 % d = 1.6;
 gamma = 6.499;
@@ -37,7 +36,7 @@ alpha_bar = 0.5436;
 % IC for ODE
 b0 = 0.00812284;
 
-p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
+p = [r, Ks_bar, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
 %%% do optimization here ==================================================
 options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
@@ -50,10 +49,9 @@ bdata = Sod;
 Aeq = []; Beq = [];
 
 % this makes sure that gamma > mu
-A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
+A = [0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
-lb(3) = 1;
-ub = [50; 20; 100; 30; 30; 30; 30; 100; 0.01];
+ub = [50; 20; 30; 30; 30; 30; 100; 0.01];
 
 
 tic
@@ -138,17 +136,16 @@ global tmax
 % parameters
 r = p(1);
 Ks_bar = p(2);
-n = p(3);
 % d = p(4);
-gamma = p(5);
-delta_bar = p(6);
-mu_bar = p(7);
+gamma = p(4);
+delta_bar = p(5);
+mu_bar = p(6);
 
 %%% set no inital death
 if t < tmax
     d = 0;
 else
-    d = p(4);
+    d = p(3);
 end
 
 Xp = zeros(3,1);
@@ -158,7 +155,7 @@ y = X(2);
 z = X(3);
 
 % ode function
-Xp(1) = ((r*z^n)/(Ks_bar^n + z^n))*x*(1 - (x + y)) - d*x;
+Xp(1) = ((r*z)/(Ks_bar + z))*x*(1 - (x + y)) - d*x;
 Xp(2) = d*x - gamma*y;
 Xp(3) = -delta_bar*x*z + mu_bar*y;
 

@@ -21,21 +21,21 @@ tdata = data(2:end,1)/60/24;
 Ef = data(2:end,2);
 
 %%% end of exponential phase
-tmax = 0.40;
+tmax = 0.26;
 
 %%% parameters
-r = 32.29;
-Ks_bar = .644524475;
-n = 2.764;
-d = 4.140855;
+r = 45.69;
+Ks_bar = .4598524475;
+n = 2.55;
+d = 4.20815;
 % d = 1.6;
-gamma = .74378;
-delta_bar = .259700835;
-mu_bar = .9317502661;
-alpha_bar = 0.76436;
+gamma = 15.499;
+delta_bar = 6.3700835;
+mu_bar = 3.16502661;
+alpha_bar = 0.5436;
 
 % IC for ODE
-b0 = 0.007912284;
+b0 = 0.00812284;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
@@ -54,7 +54,7 @@ A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
 lb(3) = 1;
 lb(4) = 0.11;
-ub = [50; 20; 100; 30; 30; 30; 30; 1; 0.01];
+ub = [50; 20; 100; 30; 30; 30; 30; 1; 0.02];
 
 
 tic
@@ -180,6 +180,7 @@ y0 = [b0, 0, 1];
 
 % get error
 err = bdata - alpha*((y(:,1) + y(:,2)));
+% err(120:end) = err(120:end)*3;
 
 J = err'*err;
 

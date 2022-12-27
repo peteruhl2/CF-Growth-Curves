@@ -24,20 +24,30 @@ Ef = data(2:end,2);
 tmax = 0.26;
 
 %%% parameters
-r = 45.69;
-Ks_bar = .4598524475;
-n = 2.55;
-d = 4.20815;
+r = 37.1595;
+Ks_bar = 0.8453;
+n = 3.9903;
+d = 3.1894;
 % d = 1.6;
-gamma = 15.499;
-delta_bar = 6.3700835;
-mu_bar = 3.16502661;
-alpha_bar = 0.5436;
+gamma = 15.1676;
+delta_bar = 10.2359;
+mu_bar = 38.8850;
+alpha_bar = 0.8225;
 
 % IC for ODE
-b0 = 0.00812284;
+b0 = 0.0028;
 
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
+
+% p = [47.3033
+%     1.4060
+%     1.9714
+%     2.1411
+%    24.5967
+%     4.4937
+%    22.8085
+%     0.9379
+%     0.0120]';
 
 %%% do optimization here ==================================================
 options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
@@ -53,13 +63,13 @@ Aeq = []; Beq = [];
 A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
 lb(3) = 1;
-lb(4) = 0.11;
-ub = [50; 20; 100; 30; 30; 30; 30; 1; 0.02];
+lb(4) = 0.051;
+ub = [60; 20; 100; 50; 50; 50; 50; 1; 0.02];
 
 
 tic
-[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
-% [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
+% [p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
+[p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
 toc
 
 % global tdata bdata

@@ -1,4 +1,4 @@
-%%% P aeurginosa aerobic growth, model #3
+%%% S odorifera aerobic growth, model #3
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
@@ -13,7 +13,7 @@ global tmax
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/PseudoAero.xlsx";
+sheet = sheet + "/OdorAero.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
@@ -21,20 +21,20 @@ tdata = data(2:end,1)/60/24;
 Pae = data(2:end,2);
 
 %%% end of exponential phase
-tmax = 0.55;
+tmax = 0.22;
 
 %%% parameters
-r = 36.5237;
-Ks_bar = 1.0267;
-n = 18.3500;
-d = 1.4260;
-gamma = 2.50139;
-delta_bar = 1.2369;
-mu_bar = 10.78627;
-alpha_bar = 1.2928;
+r = 32.77237;
+Ks_bar = 0.60267;
+n = 2.31500;
+d = 1.1135824260;
+gamma = 13.59970139;
+delta_bar = 4.382369;
+mu_bar = 16.385978627;
+alpha_bar = .449828;
 
 % IC for ODE
-b0 = 0.0001;
+b0 = 0.001274;
 
 %%% parameters
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
@@ -65,7 +65,7 @@ A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
 lb(3) = 1;
 lb(4) = 0.1;
-ub = [50; 1.5; 100; 30; 30; 30; 30; 2; 0.01];
+ub = [50; 1.5; 100; 30; 30; 30; 30; 1; 0.01];
 
 
 tic

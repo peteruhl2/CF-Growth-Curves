@@ -1,11 +1,10 @@
-%%% P aeurginosa aerobic growth, model #3
+%%% P aeruginosa aerobic growth, model #1
 %%% model is
 %%%
-%%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
-%%% y' = dx - gamma*y
-%%% z' = -delta*x*z + mu*y
+% x' = r*x*(1 - (x + y)) - d*x;
+% y' = d*x - gamma*y;
 %%%
-%%% started 12/20/22
+%%% started 12/27/22
 
 % close all
 
@@ -24,31 +23,15 @@ Pae = data(2:end,2);
 tmax = 0.55;
 
 %%% parameters
-r = 36.5237;
-Ks_bar = 1.0267;
-n = 18.3500;
-d = 1.4260;
-gamma = 2.50139;
-delta_bar = 1.2369;
-mu_bar = 10.78627;
-alpha_bar = 1.2928;
+r = 59.9;
+d = 1.803519;
+gamma = 1.5378;
+alpha_bar = .830;
 
 % IC for ODE
-b0 = 0.0001;
+b0 = 0.0000284;
 
-%%% parameters
-p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
-
-% %%% good but weird values
-% p = [36.5237
-%     1.0267
-%    18.3500
-%     1.4260
-%     2.50139
-%     1.2369
-%     10.78627
-%     1.2928
-%     0.0001]';
+p = [r, d, gamma, alpha_bar, b0];
 
 %%% do optimization here ==================================================
 options = optimset('MaxFunEvals',10000,'Display','iter'); %,...
@@ -61,16 +44,14 @@ bdata = Pae;
 Aeq = []; Beq = [];
 
 % this makes sure that gamma > mu
-A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
+A = [0 0 0 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
-lb(3) = 1;
-lb(4) = 0.1;
-ub = [50; 1.5; 100; 30; 30; 30; 30; 2; 0.01];
+ub = [50; 50; 50; 100; 0.012];
 
 
 tic
-[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
 % [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
+[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
 toc
 
 % global tdata bdata
@@ -80,7 +61,7 @@ toc
 %%% set up and solve ode ==================================================
 tspan = tdata;
 b0 = p(end);
-y0 = [b0, 0, 1];
+y0 = [b0, 0];
 
 [t, y] = ode15s(@(t,y) rhs(t,y,p), tdata, y0);
 % [t, y] = ode45c(@(t,y) rhs(t,y,p), tdata, y0);
@@ -106,7 +87,7 @@ plot(t,alpha_bar*y(:,1),'Linewidth',2)
 plot(t,alpha_bar*y(:,2),'Linewidth',2)
 xlabel("Time (days)")
 ylabel("Optical Density")
-legend("Model","Data","Living","Dead",'Fontsize',14,'location','east')
+legend("Model","Data","Living","Dead")
 
 figure()
 hold on; box on
@@ -116,11 +97,11 @@ xlabel("Time (days)", 'Fontsize',18)
 ylabel("Optical Density", 'Fontsize',18)
 legend("Model","Data",'Fontsize',18,'location','east')
 
-figure()
-hold on; box on
-plot(t,y(:,3), 'Linewidth',2)
-xlabel("Time (days)", 'Fontsize',18)
-legend("Nutrient",'Fontsize',18,'location','east')
+% figure()
+% hold on; box on
+% plot(t,y(:,3), 'Linewidth',2)
+% xlabel("Time (days)", 'Fontsize',18)
+% legend("Nutrient",'Fontsize',18,'location','east')
 
 
 % bar graph of data
@@ -149,30 +130,24 @@ global tmax
 
 % parameters
 r = p(1);
-Ks_bar = p(2);
-n = p(3);
-% d = p(4);
-gamma = p(5);
-delta_bar = p(6);
-mu_bar = p(7);
+d = p(2);
+gamma = p(3);
 
 %%% set no inital death
 if t < tmax
     d = 0;
 else
-    d = p(4);
+    d = p(3);
 end
 
-Xp = zeros(3,1);
+Xp = zeros(2,1);
 
 x = X(1);
 y = X(2);
-z = X(3);
 
 % ode function
-Xp(1) = ((r*z^n)/(Ks_bar^n + z^n))*x*(1 - (x + y)) - d*x;
+Xp(1) = r*x*(1 - (x + y)) - d*x;
 Xp(2) = d*x - gamma*y;
-Xp(3) = -delta_bar*x*z + mu_bar*y;
 
 end
 
@@ -184,7 +159,7 @@ alpha = p(end-1);
 
 b0 = p(end);
 
-y0 = [b0, 0, 1];
+y0 = [b0, 0];
 
 % solve ode
 [t, y] = ode15s(@rhs, tdata, y0, [], p);

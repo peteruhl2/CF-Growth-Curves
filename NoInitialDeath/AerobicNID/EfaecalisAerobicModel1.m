@@ -1,4 +1,4 @@
-%%% E faecalis anaerobic growth, model #1
+%%% E faecalis aerobic growth, model #1
 %%% model is
 %%%
 % x' = r*x*(1 - (x + y)) - d*x;

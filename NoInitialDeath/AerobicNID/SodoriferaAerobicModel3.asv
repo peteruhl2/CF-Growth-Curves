@@ -24,17 +24,17 @@ Pae = data(2:end,2);
 tmax = 0.22;
 
 %%% parameters
-r = 36.77237;
-Ks_bar = 1.070267;
-n = 1.31500;
-d = 6.1135824260;
-gamma = 9.59970139;
-delta_bar = 4.382369;
-mu_bar = 16.385978627;
-alpha_bar = 1.9828;
+r = 42.77237;
+Ks_bar = 0.50267;
+n = 4.31500;
+d = 2.1135824260;
+gamma = 23.59970139;
+delta_bar = 8.382369;
+mu_bar = 22.385978627;
+alpha_bar = .249828;
 
 % IC for ODE
-b0 = 0.0014;
+b0 = 0.001274;
 
 %%% parameters
 p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
@@ -65,12 +65,12 @@ A = [0 0 0 0 -1 0 1 0 0]; b_opt = 0;
 lb = zeros(length(p),1);
 lb(3) = 1;
 lb(4) = 0.1;
-ub = [50; 1.5; 100; 30; 30; 30; 30; 2; 0.01];
+ub = [70; 1.5; 100; 30; 30; 30; 30; 1; 0.01];
 
 
 tic
-[p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
-% [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
+% [p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
+[p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
 toc
 
 % global tdata bdata

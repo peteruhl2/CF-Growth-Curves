@@ -21,13 +21,13 @@ tdata = data(2:end,1)/60/24;
 Cal = data(2:end,2);
 
 %%% end of exponential phase
-tmax = 0.44;
+tmax = 1.4;
 
 %%% parameters
-r = 2.9;
-Ks_bar = .01475;
+r = 40.9;
+Ks_bar = .40475;
 n = 1.7;
-d = .93519;
+d = 1.93519;
 % d = 1.6;
 gamma = .4378;
 delta_bar = .800835;
@@ -56,8 +56,8 @@ ub = [50; 20; 100; 50; 50; 50; 50; 100; 0.01];
 
 
 tic
-% [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
 [p,fval,flag,output] = fmincon(@err,p,A,b_opt,Aeq,Beq,lb,ub,[],options,tdata,bdata);
+% [p,fval,flag,output] = fminsearch(@err,p,options,tdata,bdata);
 toc
 
 % global tdata bdata

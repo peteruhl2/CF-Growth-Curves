@@ -142,6 +142,10 @@ legend('dP/dr','dP/dn','dP/dd','dP/d\gamma','dP/d\delta','dP/d\mu',...
        'dP/d\alpha','Location','northwest','Fontsize',12)
 xlabel('Time (days)','Fontsize',18)
 
+set(legend,...
+    'Position',[0.7535 0.2452 0.1348 0.2583],...
+    'FontSize',12);
+
 
 figure()
 hold on; box on

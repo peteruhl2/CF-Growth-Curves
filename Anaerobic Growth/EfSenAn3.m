@@ -11,7 +11,7 @@
 addpath('./ode45c')
 
 %%% Load in data from spreadsheet
-data = xlsread('/Users/peteruhl/OneDrive/Growth-Curves/Anaerobic Growth/Efaecalis Anaerobic.xlsx');
+data = xlsread('/Users/peteruhl/Library/CloudStorage/OneDrive-Personal/Growth-Curves/CF-Growth-Curves/Anaerobic Growth/Efaecalis Anaerobic.xlsx');
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
@@ -84,21 +84,21 @@ y0 = [b0, 0, 1];
 
 
 %%% get derivatives
-ss_r = imag(s_r(:,1) + s_r(:,2))/h;
-ss_Ks = imag(s_Ks(:,1) + s_Ks(:,2))/h;
-ss_n = imag(s_n(:,1) + s_n(:,2))/h;
-ss_d = imag(s_d(:,1) + s_d(:,2))/h;
-ss_gamma = imag(s_gamma(:,1) + s_gamma(:,2))/h;
-ss_delta = imag(s_delta(:,1) + s_delta(:,2))/h;
-ss_mu = imag(s_mu(:,1) + s_mu(:,2))/h;
-ss_alpha = imag(s_alpha(:,1) + s_alpha(:,2))/h;
-ss_b0 = imag(s_b0(:,1) + s_b0(:,2))/h;
+ss_r = imag(alpha_bar*(s_r(:,1) + s_r(:,2)))/h;
+ss_Ks = imag(alpha_bar*(s_Ks(:,1) + s_Ks(:,2)))/h;
+ss_n = imag(alpha_bar*(s_n(:,1) + s_n(:,2)))/h;
+ss_d = imag(alpha_bar*(s_d(:,1) + s_d(:,2)))/h;
+ss_gamma = imag(alpha_bar*(s_gamma(:,1) + s_gamma(:,2)))/h;
+ss_delta = imag(alpha_bar*(s_delta(:,1) + s_delta(:,2)))/h;
+ss_mu = imag(alpha_bar*(s_mu(:,1) + s_mu(:,2)))/h;
+ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
+ss_b0 = imag(alpha_bar*(s_b0(:,1) + s_b0(:,2)))/h;
 
 %%% make sensitiviy matrix
-% M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
-M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_b0];
+M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
+% M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_b0];
 
-J = sum((alpha_bar*((y(:,1)+y(:,2))) - Sod).^2);
+J = sum((alpha_bar*((y(:,1)+y(:,2))) - Ef).^2);
 sigma2 = J/(n_timepoints-2);
 MM = inv(M'*M);
 dM = diag(MM);

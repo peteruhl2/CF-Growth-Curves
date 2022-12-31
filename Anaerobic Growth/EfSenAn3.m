@@ -91,8 +91,11 @@ ss_d = imag(alpha_bar*(s_d(:,1) + s_d(:,2)))/h;
 ss_gamma = imag(alpha_bar*(s_gamma(:,1) + s_gamma(:,2)))/h;
 ss_delta = imag(alpha_bar*(s_delta(:,1) + s_delta(:,2)))/h;
 ss_mu = imag(alpha_bar*(s_mu(:,1) + s_mu(:,2)))/h;
-ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
 ss_b0 = imag(alpha_bar*(s_b0(:,1) + s_b0(:,2)))/h;
+
+% add complex step here for alpha since its not in the ODE solve
+ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
+
 
 %%% make sensitiviy matrix
 M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];

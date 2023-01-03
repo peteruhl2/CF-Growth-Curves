@@ -1,4 +1,4 @@
-%%% Sensitivity matrix and standard error for E faecalis model 2
+%%% Sensitivity matrix and standard deviations for P aeurginosa model 2
 %%% model is
 %%%
 %%% x' = ((r*z)/(Ks + z))*x*(1 - (x+y)/k) - dx
@@ -38,15 +38,15 @@ n_timepoints = length(Ef);
 % 
 % p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
-%%% best fitting params from EfaecalisAnaerobicModel2.m
-p = [42.8650
-    0.4119
-   12.0261
-   29.8564
-    5.2758
-    3.7576
-    0.5969
-    0.0060];
+%%% best fitting params from PaeruginosaAnaerobicModel2.m
+p = [24.2812
+    0.4596
+    0.7627
+   21.0120
+    2.2594
+   14.8829
+    0.4403
+    0.0078];
 
 %%% complex step size
 h = 1e-40;
@@ -117,8 +117,8 @@ J = sum((alpha_bar*((y(:,1)+y(:,2))) - Ef).^2);
 sigma2 = J/(n_timepoints - length(p));
 MM = inv(M'*M);
 dM = diag(MM);
-sd = sqrt(sigma2.*dM);
-sd = sd'
+sd = sqrt(sigma2.*dM)
+% sd = sd'
 
 
 %%% plot derivative curves
@@ -135,7 +135,7 @@ plot(tdata, ss_b0/10,'--')
 legend('dP/dr','dP/dK_s','dP/dd','dP/d\gamma','dP/d\delta','dP/d\mu',...
        'dP/d\alpha','dP/dx_0 x 0.1','Location','northeast','Fontsize',12)
 xlabel('Time (days)','Fontsize',18)
-
+% axis tight
 
 % figure()
 % hold on; box on

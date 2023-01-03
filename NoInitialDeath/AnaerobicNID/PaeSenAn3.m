@@ -1,7 +1,7 @@
-%%% Sensitivity matrix and standard error for E faecalis model 2
+%%% Sensitivity matrix and standard deviations for P aeurginosa model 3
 %%% model is
 %%%
-%%% x' = ((r*z)/(Ks + z))*x*(1 - (x+y)/k) - dx
+%%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
 %%% y' = dx - gamma*y
 %%% z' = -delta*x*z + mu*y
 %%%
@@ -15,7 +15,7 @@ addpath('./ode45c')
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/Efaecalis Anaerobic.xlsx";
+sheet = sheet + "/Paeruginosa Anaerobic.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
@@ -38,15 +38,16 @@ n_timepoints = length(Ef);
 % 
 % p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
-%%% best fitting params from EfaecalisAnaerobicModel2.m
-p = [42.8650
-    0.4119
-   12.0261
-   29.8564
-    5.2758
-    3.7576
-    0.5969
-    0.0060];
+%%% best fitting params from PaeruginosaAnaerobicModel3.m
+p = [28.7720
+    0.8909
+    4.0032
+    1.2155
+    6.2397
+    3.1095
+   18.4787
+    0.4596
+    0.0062];
 
 %%% complex step size
 h = 1e-40;
@@ -58,23 +59,26 @@ p_r(1) = p_r(1) + 1i*h;
 p_Ks = p;
 p_Ks(2) = p_Ks(2) + 1i*h;
 
+p_n = p;
+p_n(3) = p_n(3) + 1i*h;
+
 p_d = p;
-p_d(3) = p_d(3) + 1i*h;
+p_d(4) = p_d(4) + 1i*h;
 
 p_gamma = p;
-p_gamma(4) = p_gamma(4) + 1i*h;
+p_gamma(5) = p_gamma(5) + 1i*h;
 
 p_delta = p;
-p_delta(5) = p_delta(5) + 1i*h;
+p_delta(6) = p_delta(6) + 1i*h;
 
 p_mu = p;
-p_mu(6) = p_mu(6) + 1i*h;
+p_mu(7) = p_mu(7) + 1i*h;
 
 p_alpha = p;
-p_alpha(7) = p_alpha(7) + 1i*h;
+p_alpha(8) = p_alpha(8) + 1i*h;
 
 p_b0 = p;
-p_b0(8) = p_b0(8) +1i*h;
+p_b0(9) = p_b0(9) +1i*h;
 
 %%% solve system with perturbed parameters
 tspan = tdata;
@@ -84,6 +88,7 @@ y0 = [b0, 0, 1];
 
 [t_r, s_r] = ode45c(@(t,y) rhs(t,y,p_r), tdata, [p_r(end), 0, 1]);
 [t_Ks, s_Ks] = ode45c(@(t,y) rhs(t,y,p_Ks), tdata, [p_Ks(end), 0, 1]);
+[t_n, s_n] = ode45c(@(t,y) rhs(t,y,p_n), tdata, [p_n(end), 0, 1]);
 [t_d, s_d] = ode45c(@(t,y) rhs(t,y,p_d), tdata, [p_d(end), 0, 1]);
 [t_gamma, s_gamma] = ode45c(@(t,y) rhs(t,y,p_gamma), tdata, [p_gamma(end), 0, 1]);
 [t_delta, s_delta] = ode45c(@(t,y) rhs(t,y,p_delta), tdata, [p_delta(end), 0, 1]);
@@ -97,7 +102,7 @@ y0 = [b0, 0, 1];
 %%% get derivatives
 ss_r = imag(alpha_bar*(s_r(:,1) + s_r(:,2)))/h;
 ss_Ks = imag(alpha_bar*(s_Ks(:,1) + s_Ks(:,2)))/h;
-% ss_n = imag(alpha_bar*(s_n(:,1) + s_n(:,2)))/h;
+ss_n = imag(alpha_bar*(s_n(:,1) + s_n(:,2)))/h;
 ss_d = imag(alpha_bar*(s_d(:,1) + s_d(:,2)))/h;
 ss_gamma = imag(alpha_bar*(s_gamma(:,1) + s_gamma(:,2)))/h;
 ss_delta = imag(alpha_bar*(s_delta(:,1) + s_delta(:,2)))/h;
@@ -109,7 +114,7 @@ ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
 
 
 %%% make sensitiviy matrix
-M = [ss_r, ss_Ks, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
+M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
 % M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_b0];
 
 J = sum((alpha_bar*((y(:,1)+y(:,2))) - Ef).^2);
@@ -125,24 +130,29 @@ sd = sd'
 figure()
 hold on; box on;
 plot(tdata, ss_r, '>')
-plot(tdata, ss_Ks, '<')
+% plot(tdata, ss_Ks)
+plot(tdata, ss_n, '-')
 plot(tdata, ss_d, 'x')
 plot(tdata, ss_gamma, '.-')
 plot(tdata, ss_delta, '*')
 plot(tdata, ss_mu, 'o')
 plot(tdata, ss_alpha, '.')
-plot(tdata, ss_b0/10,'--')
-legend('dP/dr','dP/dK_s','dP/dd','dP/d\gamma','dP/d\delta','dP/d\mu',...
-       'dP/d\alpha','dP/dx_0 (x ','Location','northwest','Fontsize',12)
+% plot(tdata, ss_b0)
+legend('dP/dr','dP/dn','dP/dd','dP/d\gamma','dP/d\delta','dP/d\mu',...
+       'dP/d\alpha','Location','northwest','Fontsize',12)
 xlabel('Time (days)','Fontsize',18)
 
+set(legend,...
+    'Position',[0.7535 0.3452 0.1348 0.2583],...
+    'FontSize',12);
 
-% figure()
-% hold on; box on
-% plot(tdata, ss_Ks, '<')
-% plot(tdata, ss_b0 ,'--')
-% legend('dP/dK_s','dP/dx_0','Location','northeast','Fontsize',12)
-% xlabel('Time (days)','Fontsize',18)
+
+figure()
+hold on; box on
+plot(tdata, ss_Ks, '<')
+plot(tdata, ss_b0 ,'--')
+legend('dP/dK_s','dP/dx_0','Location','northeast','Fontsize',12)
+xlabel('Time (days)','Fontsize',18)
 
 
 
@@ -163,11 +173,11 @@ function Xp = rhs(t,X,p)
 % parameters
 r = p(1);
 Ks_bar = p(2);
-% n = p(3);
-d = p(3);
-gamma = p(4);
-delta_bar = p(5);
-mu_bar = p(6);
+n = p(3);
+d = p(4);
+gamma = p(5);
+delta_bar = p(6);
+mu_bar = p(7);
 
 Xp = zeros(3,1);
 
@@ -176,7 +186,7 @@ y = X(2);
 z = X(3);
 
 % ode function
-Xp(1) = ((r*z)/(Ks_bar + z))*x*(1 - (x + y)) - d*x;
+Xp(1) = ((r*z^n)/(Ks_bar^n + z^n))*x*(1 - (x + y)) - d*x;
 Xp(2) = d*x - gamma*y;
 Xp(3) = -delta_bar*x*z + mu_bar*y;
 

@@ -24,7 +24,7 @@ Pae = data(2:end,2);
 tmax = 0.5;
 
 %%% parameters
-r = 21.69;
+r = 22.69;
 Ks_bar = .5324475;
 d = 1.2925855;
 % d = 1.6;

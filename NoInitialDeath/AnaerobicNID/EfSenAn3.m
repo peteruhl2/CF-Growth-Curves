@@ -1,4 +1,4 @@
-%%% Sensitivity matrix and standard error for E faecalis model 3
+%%% Sensitivity matrix and standard deviations for E faecalis model 3
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx

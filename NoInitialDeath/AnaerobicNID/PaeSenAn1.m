@@ -1,4 +1,4 @@
-%%% Sensitivity matrix and standard error for P aeruginosa model 1 (anaerobic)
+%%% Sensitivity matrix and standard deviations for P aeruginosa model 1 (anaerobic)
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
@@ -19,8 +19,8 @@ data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
-Ef = data(2:end,2);
-n_timepoints = length(Ef);
+Pae = data(2:end,2);
+n_timepoints = length(Pae);
 
 % %%% best fitting parameters
 % r = 49.80;
@@ -100,7 +100,7 @@ ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
 % M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
 M = [ss_r, ss_d, ss_gamma, ss_alpha, ss_b0];
 
-J = sum((alpha_bar*((y(:,1)+y(:,2))) - Ef).^2);
+J = sum((alpha_bar*((y(:,1)+y(:,2))) - Pae).^2);
 % sigma2 = J/(n_timepoints-2);
 sigma2 = J/(n_timepoints - length(p));
 MM = inv(M'*M);

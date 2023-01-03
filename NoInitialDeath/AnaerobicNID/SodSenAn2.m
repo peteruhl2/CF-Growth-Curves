@@ -1,4 +1,4 @@
-%%% Sensitivity matrix and standard deviations for P aeurginosa model 2
+%%% Sensitivity matrix and standard deviations for S odorifera model 2
 %%% model is
 %%%
 %%% x' = ((r*z)/(Ks + z))*x*(1 - (x+y)/k) - dx
@@ -15,13 +15,13 @@ addpath('./ode45c')
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/Efaecalis Anaerobic.xlsx";
+sheet = sheet + "/Sodorifera Anaerobic.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
-Pae = data(2:end,2);
-n_timepoints = length(Pae);
+Sod = data(2:end,2);
+n_timepoints = length(Sod);
 
 % %%% best fitting parameters
 % r = 49.51;
@@ -38,15 +38,15 @@ n_timepoints = length(Pae);
 % 
 % p = [r, Ks_bar, n, d, gamma, delta_bar, mu_bar, alpha_bar, b0];
 
-%%% best fitting params from PaeruginosaAnaerobicModel2.m
-p = [24.2812
-    0.4596
-    0.7627
-   21.0120
-    2.2594
-   14.8829
-    0.4403
-    0.0078];
+%%% best fitting params from SodoriferaAnaerobicModel2.m
+p = [32.5645
+    0.3249
+    0.3317
+   21.7725
+    4.3221
+    5.7773
+    0.4791
+    0.0059];
 
 %%% complex step size
 h = 1e-40;
@@ -112,7 +112,7 @@ ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
 M = [ss_r, ss_Ks, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
 % M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_b0];
 
-J = sum((alpha_bar*((y(:,1)+y(:,2))) - Pae).^2);
+J = sum((alpha_bar*((y(:,1)+y(:,2))) - Sod).^2);
 % sigma2 = J/(n_timepoints-2);
 sigma2 = J/(n_timepoints - length(p));
 MM = inv(M'*M);

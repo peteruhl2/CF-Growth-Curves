@@ -1,4 +1,4 @@
-%%% Sensitivity matrix and standard deviations for E faecalis model 1 (anaerobic)
+%%% Sensitivity matrix and standard deviations for S odorifera model 1 (anaerobic)
 %%% model is
 %%%
 %%% x' = ((r*z^n)/(Ks^n + z^n))*x*(1 - (x+y)/k) - dx
@@ -14,13 +14,13 @@ addpath('./ode45c')
 
 %%% Load in data from spreadsheet
 sheet = pwd;
-sheet = sheet + "/Efaecalis Anaerobic.xlsx";
+sheet = sheet + "/Sodorifera Anaerobic.xlsx";
 data = xlsread(sheet);
 
 % throw out first data point
 tdata = data(2:end,1)/60/24;
-Ef = data(2:end,2);
-n_timepoints = length(Ef);
+Sod = data(2:end,2);
+n_timepoints = length(Sod);
 
 % %%% best fitting parameters
 % r = 49.80;
@@ -39,11 +39,11 @@ n_timepoints = length(Ef);
 % p = [r, d, gamma, alpha_bar, b0];
 
 %%% best fitting params from EfaecalisAnaerobicModel1.m
-p = [43.5062
-   24.9792
-   14.3693
-    0.3945
-    0.0066];
+p = [32.7770
+   44.8753
+    0.9013
+    0.4547
+    0.0019];
 
 %%% complex step size
 h = 1e-40;
@@ -100,7 +100,7 @@ ss_alpha = imag((alpha_bar + (1i*h))*(s_alpha(:,1) + s_alpha(:,2)))/h;
 % M = [ss_r, ss_Ks, ss_n, ss_d, ss_gamma, ss_delta, ss_mu, ss_alpha, ss_b0];
 M = [ss_r, ss_d, ss_gamma, ss_alpha, ss_b0];
 
-J = sum((alpha_bar*((y(:,1)+y(:,2))) - Ef).^2);
+J = sum((alpha_bar*((y(:,1)+y(:,2))) - Sod).^2);
 % sigma2 = J/(n_timepoints-2);
 sigma2 = J/(n_timepoints - length(p));
 MM = inv(M'*M);

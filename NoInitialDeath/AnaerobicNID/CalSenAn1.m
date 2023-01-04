@@ -105,8 +105,8 @@ J = sum((alpha_bar*((y(:,1)+y(:,2))) - Cal).^2);
 sigma2 = J/(n_timepoints - length(p));
 MM = inv(M'*M);
 dM = diag(MM);
-sd = sqrt(sigma2.*dM);
-sd = sd'
+sd = sqrt(sigma2.*dM)
+% sd = sd'
 
 
 %%% plot derivative curves

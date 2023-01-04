@@ -150,8 +150,8 @@ set(legend,...
 figure()
 hold on; box on
 plot(tdata, ss_Ks, '<')
-plot(tdata, ss_b0 ,'--')
-legend('dP/dK_s','dP/dx_0','Location','northeast','Fontsize',12)
+plot(tdata, ss_b0/100 ,'--')
+legend('dP/dK_s','dP/dx_0 x 1/100','Location','northeast','Fontsize',12)
 xlabel('Time (days)','Fontsize',18)
 
 

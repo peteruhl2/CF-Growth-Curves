@@ -84,6 +84,8 @@ y0 = [b0, 0];
 
 
 %%% get derivatives
+alpha_bar = p(end-1);
+
 ss_r = imag(alpha_bar*(s_r(:,1) + s_r(:,2)))/h;
 % ss_Ks = imag(alpha_bar*(s_Ks(:,1) + s_Ks(:,2)))/h;
 % ss_n = imag(alpha_bar*(s_n(:,1) + s_n(:,2)))/h;
